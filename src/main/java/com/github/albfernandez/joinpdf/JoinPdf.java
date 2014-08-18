@@ -173,11 +173,12 @@ public class JoinPdf {
 
 	private void writePageNumber(PdfContentByte cb) throws DocumentException, IOException {
 		if (isPrintPageNumbers()) {
-			BaseFont bf = BaseFont.createFont(BaseFont.HELVETICA, BaseFont.CP1252, BaseFont.NOT_EMBEDDED);
+			Rectangle size = cb.getPdfDocument().getPageSize();
+			BaseFont bf = BaseFont.createFont(BaseFont.HELVETICA, BaseFont.CP1252, BaseFont.NOT_EMBEDDED);			
 			this.actualPage++;
 			cb.beginText();
 			cb.setFontAndSize(bf, 9);
-			cb.showTextAligned(PdfContentByte.ALIGN_CENTER, this.actualPage + " de " + this.totalPages, 520, 5, 0);
+			cb.showTextAligned(PdfContentByte.ALIGN_CENTER, this.actualPage + " of " + this.totalPages, size.getWidth() / 2, 10, 0);
 			cb.endText();
 		}
 	}
