@@ -44,6 +44,8 @@ public class JoinPdf {
 	private int actualPage = 0;
 	private int totalPages = 0;
 	
+	private float margin = 25.0f;
+	
 	private List<File> files = new ArrayList<File>();
 	
 	private static boolean bouncyCastleLoaded = false;
@@ -150,13 +152,12 @@ public class JoinPdf {
 	private void addImage(Image image, Document document, PdfWriter writer) throws Exception {
 		if (image.getWidth() > image.getHeight()) {
 			document.setPageSize(new Rectangle(PageSize.A4.getHeight(), PageSize.A4.getWidth()));
-			image.setAbsolutePosition(0, 0);
-			image.scaleToFit(PageSize.A4.getHeight(), PageSize.A4.getWidth());
-		}
-		else {
+			image.setAbsolutePosition(0.0f + this.margin, 0.0f + this.margin);
+			image.scaleToFit(PageSize.A4.getHeight() - this.margin * 2f, PageSize.A4.getWidth() - this.margin * 2f);
+		} else {
 			document.setPageSize(new Rectangle(PageSize.A4.getWidth(), PageSize.A4.getHeight()));
-			image.setAbsolutePosition(0, 0);
-			image.scaleToFit(PageSize.A4.getWidth(), PageSize.A4.getHeight());
+			image.setAbsolutePosition(0.0f + this.margin, 0.0f + this.margin);
+			image.scaleToFit(PageSize.A4.getWidth() - this.margin * 2f, PageSize.A4.getHeight() - this.margin * 2f);
 		}
 		document.newPage();
 		document.add(image);
@@ -248,6 +249,15 @@ public class JoinPdf {
 		}
 	}
 
+	
+
+	public float getMargin() {
+		return margin;
+	}
+
+	public void setMargin(float margin) {
+		this.margin = margin;
+	}
 
 	public boolean isExtraCompression() {
 		return this.extraCompression;
