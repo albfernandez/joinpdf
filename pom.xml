@@ -19,6 +19,7 @@
    <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
+        <version>2.2</version>
         <artifactId>maven-jar-plugin</artifactId>        
         <configuration>
           <archive>
