@@ -152,20 +152,19 @@ public class JoinPdf {
 	private void addImage(Image image, Document document, PdfWriter writer) throws Exception {
 		if (image.getWidth() > image.getHeight()) {
 			document.setPageSize(new Rectangle(PageSize.A4.getHeight(), PageSize.A4.getWidth()));
-			image.setAbsolutePosition(0.0f + this.margin, 0.0f + this.margin);
-			image.scaleToFit(PageSize.A4.getHeight() - this.margin * 2f, PageSize.A4.getWidth() - this.margin * 2f);
 		} else {
 			document.setPageSize(new Rectangle(PageSize.A4.getWidth(), PageSize.A4.getHeight()));
-			image.setAbsolutePosition(0.0f + this.margin, 0.0f + this.margin);
-			image.scaleToFit(PageSize.A4.getWidth() - this.margin * 2f, PageSize.A4.getHeight() - this.margin * 2f);
 		}
+		image.scaleToFit(document.getPageSize().getWidth() - this.margin*2f, document.getPageSize().getHeight() - this.margin*2f);
+		float px = (document.getPageSize().getWidth() - image.getScaledWidth()) / 2f;
+		float py = (document.getPageSize().getHeight() - image.getScaledHeight()) / 2f;
+		image.setAbsolutePosition(px, py);
 		document.newPage();
 		document.add(image);
 		writePageNumber(writer);
 	}
 
-	private void writePageNumber(PdfWriter writer) throws Exception {
-		
+	private void writePageNumber(PdfWriter writer) throws Exception {		
 		if (isPrintPageNumbers()){			
 			writePageNumber(writer.getDirectContent());			
 		}
@@ -182,8 +181,7 @@ public class JoinPdf {
 			cb.endText();
 		}
 	}
-	private void addPdf(File file, Document document, PdfWriter writer) throws Exception {
-		
+	private void addPdf(File file, Document document, PdfWriter writer) throws Exception {		
 		PdfReader pdfReader = null;
 		try (InputStream is = new FileInputStream(file)){
 			pdfReader = new PdfReader(is);
