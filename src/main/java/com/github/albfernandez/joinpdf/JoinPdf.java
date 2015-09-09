@@ -76,7 +76,9 @@ public class JoinPdf {
 
 	public final void addDir(File dir) {
 		File[] documents = dir.listFiles(new JoinPdfFileFilter());
-		addFiles(Arrays.asList(documents));
+		if (documents != null) {
+			addFiles(Arrays.asList(documents));
+		}
 	}
 
 	public final void addFile(File document) {
