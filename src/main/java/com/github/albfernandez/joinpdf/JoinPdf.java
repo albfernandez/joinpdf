@@ -251,7 +251,7 @@ public class JoinPdf {
 	
 
 	public float getMargin() {
-		return margin;
+		return this.margin;
 	}
 
 	public void setMargin(float margin) {
