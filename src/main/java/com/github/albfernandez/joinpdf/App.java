@@ -1,7 +1,7 @@
 package com.github.albfernandez.joinpdf;
 /*
     (C) Copyright 2014-2015 Alberto Fernández <infjaf@gmail.com>
-    
+
     This file is part of joinpdf.
 
     Foobar is free software: you can redistribute it and/or modify
@@ -23,16 +23,19 @@ import java.io.File;
 /**
  *
  */
-public class App {
-    public static void main( String[] args ) throws Exception {
+public final class App {
+	private App() {
+		throw new AssertionError("No instances allowed");
+	}
+    public static void main(String[] args) throws Exception {
     	if (args.length < 2) {
     		System.out.println("Debe indicar archivos");
     		return;
     	}
-    	JoinPdf join = new JoinPdf();
-    	for (int i = 0; i <= args.length -2; i++){
-    		join.addFile(new File(args[i]));
-    	}
-    	join.export(new File(args[args.length-1]));
-    }
+		JoinPdf join = new JoinPdf();
+		for (int i = 0; i <= args.length - 2; i++) {
+			join.addFile(new File(args[i]));
+		}
+		join.export(new File(args[args.length - 1]));
+	}
 }
