@@ -27,7 +27,7 @@ public final class ItextUtils {
         throw new AssertionError("No instances allowed");
     }
 
-    public static void close(Document document) {
+    public static void close(final Document document) {
         try {
             if (document != null) {
                 document.close();
@@ -37,7 +37,7 @@ public final class ItextUtils {
         }
     }
 
-    public static void close(PdfReader reader) {
+    public static void close(final PdfReader reader) {
         try {
             if (reader != null) {
                 reader.close();

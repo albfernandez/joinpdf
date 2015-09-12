@@ -29,7 +29,7 @@ public class JoinPdfFileFilter implements FileFilter {
         super();
     }
 
-    public boolean accept(File pathname) {
+    public final boolean accept(final File pathname) {
         if (pathname == null) {
             return false;
         }

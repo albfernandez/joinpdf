@@ -82,15 +82,15 @@ public class JoinPdf {
         super();
     }
 
-    public JoinPdf(List<File> documentFilesFiles) {
+    public JoinPdf(final List<File> documentFilesFiles) {
         addFiles(documentFilesFiles);
     }
 
-    public JoinPdf(File dir) {
+    public JoinPdf(final File dir) {
         addDir(dir);
     }
 
-    public final void addDir(File dir) {
+    public final void addDir(final File dir) {
         if (dir != null && dir.isDirectory()) {
             File[] documents = dir.listFiles(new JoinPdfFileFilter());
             if (documents != null) {
@@ -101,19 +101,19 @@ public class JoinPdf {
         }
     }
 
-    public final void addFile(File document) {
+    public final void addFile(final File document) {
         if (document != null && document.canRead() && document.isFile()) {
             this.files.add(document);
         }
     }
 
-    public final void addFiles(List<File> documents) {
+    public final void addFiles(final List<File> documents) {
         for (File document : documents) {
             addFile(document);
         }
     }
 
-    public synchronized void export(OutputStream os) throws Exception {
+    public final synchronized void export(final OutputStream os) throws Exception {
         checkParameters();
         Document document = new Document();
 
@@ -133,7 +133,7 @@ public class JoinPdf {
         }
     }
 
-    private void add(File file, Document document, PdfWriter writer)
+    private void add(final File file, final Document document, final PdfWriter writer)
             throws Exception {
         String fileName = StringUtils.lowerCase(file.getName(), LOCALE_ES);
         if (fileName.endsWith(".tif") || fileName.endsWith(".tiff")) {
@@ -145,13 +145,13 @@ public class JoinPdf {
         }
     }
 
-    private void addImage(File file, Document document, PdfWriter writer)
+    private void addImage(final File file, final Document document, final PdfWriter writer)
             throws Exception {
         Image image = Image.getInstance(Files.readAllBytes(file.toPath()));
         addImage(image, document, writer);
     }
 
-    private void addImage(Image image, Document document, PdfWriter writer)
+    private void addImage(final Image image, final Document document, final PdfWriter writer)
             throws Exception {
         if (image.getWidth() > image.getHeight()) {
             document.setPageSize(new Rectangle(PageSize.A4.getHeight(),
@@ -171,13 +171,13 @@ public class JoinPdf {
         writePageNumber(writer);
     }
 
-    private void writePageNumber(PdfWriter writer) throws Exception {
+    private void writePageNumber(final PdfWriter writer) throws Exception {
         if (isPrintPageNumbers()) {
             writePageNumber(writer.getDirectContent());
         }
     }
 
-    private void writePageNumber(PdfContentByte cb) throws DocumentException,
+    private void writePageNumber(final PdfContentByte cb) throws DocumentException,
             IOException {
         if (isPrintPageNumbers()) {
             Rectangle size = cb.getPdfDocument().getPageSize();
@@ -192,7 +192,7 @@ public class JoinPdf {
         }
     }
 
-    private void addPdf(File file, Document document, PdfWriter writer)
+    private void addPdf(final File file, final Document document, final PdfWriter writer)
             throws Exception {
         PdfReader pdfReader = null;
         try (InputStream is = new FileInputStream(file)) {
@@ -226,7 +226,7 @@ public class JoinPdf {
         return pages;
     }
 
-    private int getPageCount(File file) throws IOException {
+    private int getPageCount(final File file) throws IOException {
         String fileName = StringUtils.lowerCase(file.getName(), LOCALE_ES);
         if (fileName.endsWith(".tif") || fileName.endsWith(".tiff")) {
             return getPageCountTif(file);
@@ -238,7 +238,7 @@ public class JoinPdf {
 
     }
 
-    private void addTiff(File file, Document document, PdfWriter writer)
+    private void addTiff(final File file, final Document document, final PdfWriter writer)
             throws Exception {
         RandomAccessSource source = createRamdomAccessSource(file);
         RandomAccessFileOrArray ramdomAccess = new RandomAccessFileOrArray(
@@ -251,7 +251,7 @@ public class JoinPdf {
 
     }
 
-    private static RandomAccessSource createRamdomAccessSource(File file)
+    private static RandomAccessSource createRamdomAccessSource(final File file)
             throws IOException {
         RandomAccessSource source = new RandomAccessSourceFactory()
                 .setForceRead(false)
@@ -260,45 +260,45 @@ public class JoinPdf {
         return source;
     }
 
-    public void export(File file) throws Exception {
+    public void export(final File file) throws Exception {
         try (OutputStream os = new FileOutputStream(file)) {
             export(os);
         }
     }
 
-    public float getMargin() {
+    public final float getMargin() {
         return this.margin;
     }
 
-    public void setMargin(float margin) {
+    public final void setMargin(final float margin) {
         this.margin = margin;
     }
 
-    public boolean isExtraCompression() {
+    public final boolean isExtraCompression() {
         return this.extraCompression;
     }
 
-    public void setExtraCompression(boolean extraCompression) {
+    public final void setExtraCompression(final boolean extraCompression) {
         this.extraCompression = extraCompression;
     }
 
-    public boolean isCrypt() {
+    public final boolean isCrypt() {
         return this.crypt;
     }
 
-    public void setCrypt(boolean crypt) {
+    public final void setCrypt(final boolean crypt) {
         this.crypt = crypt;
     }
 
-    public boolean isPrintPageNumbers() {
+    public final boolean isPrintPageNumbers() {
         return this.printPageNumbers;
     }
 
-    public void setPrintPageNumbers(boolean pageNumbers) {
+    public final void setPrintPageNumbers(final boolean pageNumbers) {
         this.printPageNumbers = pageNumbers;
     }
 
-    private void setParametersAndHeaders(PdfWriter writer, Document document)
+    private void setParametersAndHeaders(final PdfWriter writer, final Document document)
             throws DocumentException {
         if (this.extraCompression) {
             writer.setFullCompression();
@@ -331,56 +331,56 @@ public class JoinPdf {
         }
     }
 
-    public String getMetadataAuthor() {
+    public final String getMetadataAuthor() {
         return this.metadataAuthor;
     }
 
-    public void setMetadataAuthor(String metadataAuthor) {
+    public final void setMetadataAuthor(final String metadataAuthor) {
         this.metadataAuthor = metadataAuthor;
     }
 
-    public String getMetadataKeywords() {
+    public final String getMetadataKeywords() {
         return this.metadataKeywords;
     }
 
-    public void setMetadataKeywords(String metadataKeywords) {
+    public final void setMetadataKeywords(final String metadataKeywords) {
         this.metadataKeywords = metadataKeywords;
     }
 
-    public String getMetadataTitle() {
+    public final String getMetadataTitle() {
         return this.metadataTitle;
     }
 
-    public void setMetadataTitle(String metadataTitle) {
+    public final void setMetadataTitle(final String metadataTitle) {
         this.metadataTitle = metadataTitle;
     }
 
-    public String getMetadataSubject() {
+    public final String getMetadataSubject() {
         return this.metadataSubject;
     }
 
-    public void setMetadataSubject(String metadataSubject) {
+    public final void setMetadataSubject(final String metadataSubject) {
         this.metadataSubject = metadataSubject;
     }
 
-    public static int getPageCountTif(File file) throws IOException {
+    public static int getPageCountTif(final File file) throws IOException {
         RandomAccessSource source = createRamdomAccessSource(file);
         RandomAccessFileOrArray ramdomAccess = new RandomAccessFileOrArray(
                 source);
         return TiffImage.getNumberOfPages(ramdomAccess);
     }
 
-    public static int getPageCountPdf(byte[] contenido) {
+    public static int getPageCountPdf(final byte[] contenido) {
         return getPageCountPdf(new ByteArrayInputStream(contenido));
     }
 
-    public static int getPageCountPdf(File file) throws IOException {
+    public static int getPageCountPdf(final File file) throws IOException {
         try (InputStream is = new FileInputStream(file)) {
             return getPageCountPdf(is);
         }
     }
 
-    private static int getPageCountPdf(InputStream is) {
+    private static int getPageCountPdf(final InputStream is) {
         PdfReader pdfReader = null;
         try {
             pdfReader = new PdfReader(is);

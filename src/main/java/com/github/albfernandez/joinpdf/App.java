@@ -29,7 +29,7 @@ public final class App {
         throw new AssertionError("No instances allowed");
     }
 
-    public static void main(String[] args) throws Exception {
+    public static void main(final String[] args) throws Exception {
         if (args.length < 2) {
             System.out.println("Debe indicar archivos");
             return;
