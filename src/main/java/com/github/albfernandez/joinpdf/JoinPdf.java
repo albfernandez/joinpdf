@@ -122,11 +122,7 @@ public class JoinPdf {
 				add(file, document, writer);
 			}
 		} finally {
-			try {
-				document.close();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+			ItextUtils.close(document);
 		}
 	}
 
@@ -213,7 +209,7 @@ public class JoinPdf {
 		} finally {
 			if (pdfReader != null) {
 				writer.freeReader(pdfReader);
-				pdfReader.close();
+				ItextUtils.close(pdfReader);
 			}
 		}
 	}
@@ -379,15 +375,11 @@ public class JoinPdf {
 		PdfReader pdfReader = null;
 		try {
 			pdfReader = new PdfReader(is);
-
 			return pdfReader.getNumberOfPages();
-		} catch (Exception e) {
-			e.printStackTrace();
+		} catch (Exception e) {			
 			return 0;
 		} finally {
-			if (pdfReader != null) {
-				pdfReader.close();
-			}
+			ItextUtils.close(pdfReader);
 		}
 	}
 	 
