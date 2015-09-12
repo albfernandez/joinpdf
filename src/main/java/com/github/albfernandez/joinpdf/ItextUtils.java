@@ -14,7 +14,7 @@ public final class ItextUtils {
 				document.close();
 			}
 		}
-		catch (Exception e) {
+		catch (Exception e) {  //NOPMD
 			//
 		}
 	}
@@ -24,7 +24,7 @@ public final class ItextUtils {
 				reader.close();
 			}
 		}
-		catch (Exception e) {
+		catch (Exception e) {  //NOPMD
 			//
 		}
 	}
