@@ -24,8 +24,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.file.Files;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
@@ -92,18 +92,26 @@ public class JoinPdf {
 	}
 
 	public final void addDir(File dir) {
-		File[] documents = dir.listFiles(new JoinPdfFileFilter());
-		if (documents != null) {
-			addFiles(Arrays.asList(documents));
+		if (dir != null && dir.isDirectory()) {
+			File[] documents = dir.listFiles(new JoinPdfFileFilter());
+			if (documents != null) {
+				for (File document: documents) {
+					addFile(document);
+				}
+			}
 		}
 	}
 
 	public final void addFile(File document) {
-		this.files.add(document);
+		if (document != null && document.canRead() && document.isFile()){
+			this.files.add(document);
+		}
 	}
 
 	public final void addFiles(List<File> documents) {
-		this.files.addAll(documents);
+		for (File document: documents) {
+			addFile(document);
+		}
 	}
 
 	public synchronized void export(OutputStream os) throws Exception {
@@ -138,23 +146,8 @@ public class JoinPdf {
 	}
 
 	private void addImage(File file, Document document, PdfWriter writer) throws Exception {
-		Image image = Image.getInstance(fileToByteArray(file));
+		Image image = Image.getInstance(Files.readAllBytes(file.toPath()));
 		addImage(image, document, writer);
-	}
-
-	private byte[] fileToByteArray(File file) throws IOException {
-		byte[] retVal = null;
-		long longitud = file.length();
-
-		try (FileInputStream fis = new FileInputStream(file)) {
-			retVal = new byte[(int) longitud];
-			int totalReaded = 0;
-			int readed = 0;
-			while ((readed = fis.available()) > 0) {
-				totalReaded += fis.read(retVal, totalReaded, readed);
-			}
-			return retVal;
-		}
 	}
 
 	private void addImage(Image image, Document document, PdfWriter writer) throws Exception {
