@@ -260,7 +260,7 @@ public class JoinPdf {
         return source;
     }
 
-    public void export(final File file) throws Exception {
+    public final void export(final File file) throws Exception {
         try (OutputStream os = new FileOutputStream(file)) {
             export(os);
         }
@@ -270,32 +270,32 @@ public class JoinPdf {
         return this.margin;
     }
 
-    public final void setMargin(final float margin) {
-        this.margin = margin;
+    public final void setMargin(final float newMargin) {
+        this.margin = newMargin;
     }
 
     public final boolean isExtraCompression() {
         return this.extraCompression;
     }
 
-    public final void setExtraCompression(final boolean extraCompression) {
-        this.extraCompression = extraCompression;
+    public final void setExtraCompression(final boolean newExtraCompression) {
+        this.extraCompression = newExtraCompression;
     }
 
     public final boolean isCrypt() {
         return this.crypt;
     }
 
-    public final void setCrypt(final boolean crypt) {
-        this.crypt = crypt;
+    public final void setCrypt(final boolean newCrypt) {
+        this.crypt = newCrypt;
     }
 
     public final boolean isPrintPageNumbers() {
         return this.printPageNumbers;
     }
 
-    public final void setPrintPageNumbers(final boolean pageNumbers) {
-        this.printPageNumbers = pageNumbers;
+    public final void setPrintPageNumbers(final boolean newPageNumbers) {
+        this.printPageNumbers = newPageNumbers;
     }
 
     private void setParametersAndHeaders(final PdfWriter writer, final Document document)
@@ -335,32 +335,32 @@ public class JoinPdf {
         return this.metadataAuthor;
     }
 
-    public final void setMetadataAuthor(final String metadataAuthor) {
-        this.metadataAuthor = metadataAuthor;
+    public final void setMetadataAuthor(final String newMetadataAuthor) {
+        this.metadataAuthor = newMetadataAuthor;
     }
 
     public final String getMetadataKeywords() {
         return this.metadataKeywords;
     }
 
-    public final void setMetadataKeywords(final String metadataKeywords) {
-        this.metadataKeywords = metadataKeywords;
+    public final void setMetadataKeywords(final String newMetadataKeywords) {
+        this.metadataKeywords = newMetadataKeywords;
     }
 
     public final String getMetadataTitle() {
         return this.metadataTitle;
     }
 
-    public final void setMetadataTitle(final String metadataTitle) {
-        this.metadataTitle = metadataTitle;
+    public final void setMetadataTitle(final String newMetadataTitle) {
+        this.metadataTitle = newMetadataTitle;
     }
 
     public final String getMetadataSubject() {
         return this.metadataSubject;
     }
 
-    public final void setMetadataSubject(final String metadataSubject) {
-        this.metadataSubject = metadataSubject;
+    public final void setMetadataSubject(final String newMetadataSubject) {
+        this.metadataSubject = newMetadataSubject;
     }
 
     public static int getPageCountTif(final File file) throws IOException {

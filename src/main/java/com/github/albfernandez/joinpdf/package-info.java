@@ -1,3 +1,6 @@
+/**
+ * Join pdfs and images into a single pdf file.
+ */
 package com.github.albfernandez.joinpdf;
 
 /*
@@ -16,7 +19,4 @@ package com.github.albfernandez.joinpdf;
  *
  * You should have received a copy of the GNU General Public License along with
  * Foobar. If not, see <http://www.gnu.org/licenses/>.
- */
-/**
- * Join pdfs and images into a single pdf file
  */
