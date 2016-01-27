@@ -31,7 +31,7 @@ public final class App {
 
     public static void main(final String[] args) throws Exception {
         if (args.length < 2) {
-            System.out.println("Debe indicar archivos");
+            System.out.println("You must indicate the files");
             return;
         }
         JoinPdf join = new JoinPdf();
