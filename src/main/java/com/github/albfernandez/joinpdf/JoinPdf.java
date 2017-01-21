@@ -32,20 +32,19 @@ import java.util.Locale;
 
 import org.apache.commons.lang3.StringUtils;
 
-import com.itextpdf.text.Document;
-import com.itextpdf.text.DocumentException;
-import com.itextpdf.text.Image;
-import com.itextpdf.text.PageSize;
-import com.itextpdf.text.Rectangle;
-import com.itextpdf.text.io.RandomAccessSource;
-import com.itextpdf.text.io.RandomAccessSourceFactory;
-import com.itextpdf.text.pdf.BaseFont;
-import com.itextpdf.text.pdf.PdfContentByte;
-import com.itextpdf.text.pdf.PdfImportedPage;
-import com.itextpdf.text.pdf.PdfReader;
-import com.itextpdf.text.pdf.PdfWriter;
-import com.itextpdf.text.pdf.RandomAccessFileOrArray;
-import com.itextpdf.text.pdf.codec.TiffImage;
+import com.lowagie.text.Document;
+import com.lowagie.text.DocumentException;
+import com.lowagie.text.Image;
+import com.lowagie.text.PageSize;
+import com.lowagie.text.Rectangle;
+import com.lowagie.text.pdf.BaseFont;
+import com.lowagie.text.pdf.PdfContentByte;
+import com.lowagie.text.pdf.PdfImportedPage;
+import com.lowagie.text.pdf.PdfReader;
+import com.lowagie.text.pdf.PdfWriter;
+import com.lowagie.text.pdf.RandomAccessFileOrArray;
+import com.lowagie.text.pdf.codec.TiffImage;
+
 
 public class JoinPdf {
 
@@ -240,24 +239,19 @@ public class JoinPdf {
 
     private void addTiff(final File file, final Document document, final PdfWriter writer)
             throws Exception {
-        RandomAccessSource source = createRamdomAccessSource(file);
-        RandomAccessFileOrArray ramdomAccess = new RandomAccessFileOrArray(
-                source);
+        RandomAccessFileOrArray randomAccess = createRamdomAccessSource(file);
+       
         int pages = getPageCount(file);
         for (int i = 1; i <= pages; i++) {
-            Image image = TiffImage.getTiffImage(ramdomAccess, i);
+            Image image = TiffImage.getTiffImage(randomAccess, i);
             addImage(image, document, writer);
         }
 
     }
 
-    private static RandomAccessSource createRamdomAccessSource(final File file)
+    private static RandomAccessFileOrArray createRamdomAccessSource(final File file)
             throws IOException {
-        RandomAccessSource source = new RandomAccessSourceFactory()
-                .setForceRead(false)
-                .setUsePlainRandomAccess(Document.plainRandomAccess)
-                .createBestSource(file.getAbsolutePath());
-        return source;
+        return new RandomAccessFileOrArray(file.getAbsolutePath(),false, Document.plainRandomAccess);        
     }
 
     public final void export(final File file) throws Exception {
@@ -364,10 +358,8 @@ public class JoinPdf {
     }
 
     public static int getPageCountTif(final File file) throws IOException {
-        RandomAccessSource source = createRamdomAccessSource(file);
-        RandomAccessFileOrArray ramdomAccess = new RandomAccessFileOrArray(
-                source);
-        return TiffImage.getNumberOfPages(ramdomAccess);
+        RandomAccessFileOrArray randomAccess = createRamdomAccessSource(file);
+        return TiffImage.getNumberOfPages(randomAccess);
     }
 
     public static int getPageCountPdf(final byte[] contenido) {

@@ -1,5 +1,8 @@
 package com.github.albfernandez.joinpdf;
 
+import com.lowagie.text.Document;
+import com.lowagie.text.pdf.PdfReader;
+
 /*
  (C) Copyright 2014-2015 Alberto Fernández <infjaf@gmail.com>
 
@@ -18,8 +21,7 @@ package com.github.albfernandez.joinpdf;
  You should have received a copy of the GNU General Public License
  along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
  */
-import com.itextpdf.text.Document;
-import com.itextpdf.text.pdf.PdfReader;
+
 
 public final class ItextUtils {
 
