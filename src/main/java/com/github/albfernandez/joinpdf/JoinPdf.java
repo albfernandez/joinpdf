@@ -1,7 +1,5 @@
-package com.github.albfernandez.joinpdf;
-
 /*
- (C) Copyright 2014-2015 Alberto Fernández <infjaf@gmail.com>
+ (C) Copyright 2014-2017 Alberto Fernández <infjaf@gmail.com>
 
  This file is part of joinpdf.
 
@@ -18,6 +16,10 @@ package com.github.albfernandez.joinpdf;
  You should have received a copy of the GNU General Public License
  along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
  */
+
+package com.github.albfernandez.joinpdf;
+
+
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
