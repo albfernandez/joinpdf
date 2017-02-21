@@ -66,6 +66,8 @@ public class JoinPdf {
     private List<File> files = new ArrayList<File>();
 
     private static boolean bouncyCastleLoaded = false;
+    
+    private Rectangle pageSize = PageSize.A4;
 
     static {
         try {
@@ -112,13 +114,14 @@ public class JoinPdf {
         }
     }
 
+    
     public final synchronized void export(final OutputStream os) throws Exception {
         checkParameters();
         Document document = new Document();
 
         try {
             if (isPrintPageNumbers()) {
-                this.totalPages = gePageCount();
+                this.totalPages = geTotalPageCount();
                 this.actualPage = 0;
             }
             PdfWriter writer = PdfWriter.getInstance(document, os);
@@ -153,17 +156,14 @@ public class JoinPdf {
     private void addImage(final Image image, final Document document, final PdfWriter writer)
             throws Exception {
         if (image.getWidth() > image.getHeight()) {
-            document.setPageSize(new Rectangle(PageSize.A4.getHeight(),
-                    PageSize.A4.getWidth()));
+            document.setPageSize(new Rectangle(this.pageSize.getHeight(), this.pageSize.getWidth()));
         } else {
-            document.setPageSize(new Rectangle(PageSize.A4.getWidth(),
-                    PageSize.A4.getHeight()));
+            document.setPageSize(new Rectangle(this.pageSize.getWidth(), this.pageSize.getHeight()));
         }
         image.scaleToFit(document.getPageSize().getWidth() - this.margin * 2f,
                 document.getPageSize().getHeight() - this.margin * 2f);
         float px = (document.getPageSize().getWidth() - image.getScaledWidth()) / 2f;
-        float py = (document.getPageSize().getHeight() - image
-                .getScaledHeight()) / 2f;
+        float py = (document.getPageSize().getHeight() - image.getScaledHeight()) / 2f;
         image.setAbsolutePosition(px, py);
         document.newPage();
         document.add(image);
@@ -197,13 +197,11 @@ public class JoinPdf {
         try (InputStream is = new FileInputStream(file)) {
             pdfReader = new PdfReader(is);
             PdfContentByte cb = writer.getDirectContent();
-            for (int currentPage = 1; currentPage <= pdfReader
-                    .getNumberOfPages(); currentPage++) {
+            for (int currentPage = 1; currentPage <= pdfReader.getNumberOfPages(); currentPage++) {
                 Rectangle currentPageSize = pdfReader.getPageSize(currentPage);
                 document.setPageSize(currentPageSize);
                 document.newPage();
-                PdfImportedPage page = writer.getImportedPage(pdfReader,
-                        currentPage);
+                PdfImportedPage page = writer.getImportedPage(pdfReader, currentPage);
                 cb.addTemplate(page, 0, 0);
                 writePageNumber(cb);
 
@@ -217,7 +215,7 @@ public class JoinPdf {
         }
     }
 
-    private int gePageCount() throws IOException {
+    private int geTotalPageCount() throws IOException {
         int pages = 0;
         for (File file : this.files) {
             pages += getPageCount(file);
@@ -383,5 +381,15 @@ public class JoinPdf {
             ItextUtils.close(pdfReader);
         }
     }
+
+	public Rectangle getPageSize() {
+		return this.pageSize;
+	}
+
+	public void setPageSize(Rectangle pageSize) {
+		this.pageSize = pageSize;
+	}
+    
+    
 
 }
