@@ -20,14 +20,15 @@
 package com.github.albfernandez.joinpdf;
 
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.Files;
+import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -196,7 +197,7 @@ public class JoinPdf {
     private void addPdf(final File file, final Document document, final PdfWriter writer)
             throws Exception {
         PdfReader pdfReader = null;
-        try (InputStream is = new FileInputStream(file)) {
+        try (InputStream is = new BufferedInputStream(Files.newInputStream(file.toPath()))) {
             pdfReader = new PdfReader(is);
             PdfContentByte cb = writer.getDirectContent();
             for (int currentPage = 1; currentPage <= pdfReader.getNumberOfPages(); currentPage++) {
@@ -255,7 +256,7 @@ public class JoinPdf {
     }
 
     public final void export(final File file) throws Exception {
-        try (OutputStream os = new FileOutputStream(file)) {
+        try (OutputStream os = new BufferedOutputStream(Files.newOutputStream(file.toPath(), StandardOpenOption.CREATE_NEW))) {
             export(os);
         }
     }
@@ -367,7 +368,7 @@ public class JoinPdf {
     }
 
     public static int getPageCountPdf(final File file) throws IOException {
-        try (InputStream is = new FileInputStream(file)) {
+        try (InputStream is = new BufferedInputStream(Files.newInputStream(file.toPath()))) {
             return getPageCountPdf(is);
         }
     }
