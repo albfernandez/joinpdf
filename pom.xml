@@ -36,12 +36,48 @@
 			<url>http://www.gnu.org/licenses/gpl-3.0.txt</url>
 		</license>
 	</licenses>
-	
-		
+
+
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 	</properties>
+
+	<profiles>
+		<profile>
+			<id>distribution</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-assembly-plugin</artifactId>
+						<version>3.1.0</version>
+						<configuration>
+							<archive>
+								<manifest>
+									<mainClass>com.github.albfernandez.joinpdf.App</mainClass>
+									<addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+									<addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
+								</manifest>
+							</archive>
+							<descriptorRefs>
+								<descriptorRef>jar-with-dependencies</descriptorRef>
+							</descriptorRefs>
+						</configuration>
+						<executions>
+							<execution>
+								<id>make-assembly</id>
+								<phase>package</phase>
+								<goals>
+									<goal>single</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
 
 
 	<dependencies>
@@ -65,7 +101,7 @@
 		<dependency>
 			<groupId>org.bouncycastle</groupId>
 			<artifactId>bcprov-jdk15on</artifactId>
-			<version>1.54</version>
+			<version>1.58</version>
 		</dependency>
 
 	</dependencies>
@@ -119,6 +155,9 @@
 				<version>3.0.2</version>
 				<configuration>
 					<archive>
+						<manifestEntries>
+							<Automatic-Module-Name>com.github.albfernandez.joinpdf</Automatic-Module-Name>
+						</manifestEntries>
 						<manifest>
 							<mainClass>com.github.albfernandez.joinpdf.App</mainClass>
 							<addDefaultImplementationEntries>true</addDefaultImplementationEntries>
@@ -128,63 +167,6 @@
 				</configuration>
 			</plugin>
 
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-assembly-plugin</artifactId>
-				<version>3.1.0</version>
-				<configuration>
-					<archive>
-						<manifest>
-							<mainClass>com.github.albfernandez.joinpdf.App</mainClass>
-							<addDefaultImplementationEntries>true</addDefaultImplementationEntries>
-							<addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
-						</manifest>
-					</archive>
-					<descriptorRefs>
-						<descriptorRef>jar-with-dependencies</descriptorRef>
-					</descriptorRefs>
-				</configuration>
-				<executions>
-					<execution>
-						<id>make-assembly</id>
-						<phase>package</phase>
-						<goals>
-							<goal>single</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-			<!-- 
-			<plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-gpg-plugin</artifactId>
-                <version>1.6</version>
-                <configuration>
-              		<keyname>${gpg.keyname}</keyname>
-              		<passphraseServerId>${gpg.keyname}</passphraseServerId>
-              	</configuration>
-                <executions>
-                    <execution>
-                        <id>sign-artifacts</id>
-                        <phase>verify</phase>
-                        <goals>
-                            <goal>sign</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-			<plugin>
-				<groupId>org.sonatype.plugins</groupId>
-				<artifactId>nexus-staging-maven-plugin</artifactId>
-				<version>1.6.6</version>
-				<extensions>true</extensions>
-				<configuration>
-					<serverId>ossrh</serverId>
-					<nexusUrl>https://oss.sonatype.org/</nexusUrl>
-					<autoReleaseAfterClose>true</autoReleaseAfterClose>
-				</configuration>
-			</plugin>
-			 -->
 		</plugins>
 	</build>
 	<reporting>
