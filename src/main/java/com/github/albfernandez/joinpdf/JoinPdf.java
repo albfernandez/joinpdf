@@ -20,6 +20,7 @@
 package com.github.albfernandez.joinpdf;
 
 
+import java.awt.image.BufferedImage;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayInputStream;
@@ -30,8 +31,13 @@ import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+
+import javax.imageio.ImageIO;
+import javax.imageio.ImageReader;
+import javax.imageio.stream.ImageInputStream;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -45,8 +51,6 @@ import com.lowagie.text.pdf.PdfContentByte;
 import com.lowagie.text.pdf.PdfImportedPage;
 import com.lowagie.text.pdf.PdfReader;
 import com.lowagie.text.pdf.PdfWriter;
-import com.lowagie.text.pdf.RandomAccessFileOrArray;
-import com.lowagie.text.pdf.codec.TiffImage;
 
 
 public class JoinPdf {
@@ -238,22 +242,23 @@ public class JoinPdf {
 
     }
 
+
     private void addTiff(final File file, final Document document, final PdfWriter writer)
             throws Exception {
-        RandomAccessFileOrArray randomAccess = createRamdomAccessSource(file);
-       
-        int pages = getPageCount(file);
-        for (int i = 1; i <= pages; i++) {
-            Image image = TiffImage.getTiffImage(randomAccess, i);
-            addImage(image, document, writer);
-        }
-
+    	
+    	try (ImageInputStream iis = ImageIO.createImageInputStream(file)) {
+    		ImageReader reader = getTiffImageReader();
+    		reader.setInput(iis);
+    		int pages = reader.getNumImages(true);
+            for (int imageIndex = 0; imageIndex < pages; imageIndex++) {
+                BufferedImage bufferedImage = reader.read(imageIndex);
+                Image image = Image.getInstance(bufferedImage, null, false);
+                addImage(image, document, writer);
+            }
+    	}
     }
 
-    private static RandomAccessFileOrArray createRamdomAccessSource(final File file)
-            throws IOException {
-        return new RandomAccessFileOrArray(file.getAbsolutePath(),false, Document.plainRandomAccess);        
-    }
+
 
     public final void export(final File file) throws Exception {
         try (OutputStream os = new BufferedOutputStream(Files.newOutputStream(file.toPath(), StandardOpenOption.CREATE_NEW))) {
@@ -359,8 +364,13 @@ public class JoinPdf {
     }
 
     public static int getPageCountTif(final File file) throws IOException {
-        RandomAccessFileOrArray randomAccess = createRamdomAccessSource(file);
-        return TiffImage.getNumberOfPages(randomAccess);
+    	int pages = 0;
+    	try (ImageInputStream iis = ImageIO.createImageInputStream(file)) {
+    		ImageReader reader = getTiffImageReader();
+    		reader.setInput(iis);
+    		pages = reader.getNumImages(true);
+    	}
+    	return pages;
     }
 
     public static int getPageCountPdf(final byte[] contenido) {
@@ -393,6 +403,13 @@ public class JoinPdf {
 		this.pageSize = pageSize;
 	}
     
+	private static ImageReader getTiffImageReader() {
+		Iterator<ImageReader> imageReaders = ImageIO.getImageReadersByFormatName("TIFF");
+		if (!imageReaders.hasNext()) {
+			throw new UnsupportedOperationException("No TIFF Reader found!");
+		}
+		return imageReaders.next();
+	}
     
 
 }
