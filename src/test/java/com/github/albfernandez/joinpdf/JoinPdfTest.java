@@ -20,8 +20,8 @@ along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class JoinPdfTest {
 
@@ -69,7 +69,7 @@ public class JoinPdfTest {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		join.export(baos);
 		byte[] data = baos.toByteArray();
-		Assert.assertEquals(pages, JoinPdf.getPageCountPdf(data));
+		Assertions.assertEquals(pages, JoinPdf.getPageCountPdf(data));
 
 	}
 }
