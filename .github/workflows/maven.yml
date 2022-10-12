@@ -4,16 +4,16 @@
 name: joinpdf CI
 on:
   push:
-    branches: [ '*' ]
+    branches: [ main ]
   pull_request:
-    branches: [ '*' ]
+    branches: [ main ]
 
 jobs:
   build:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        java: [ 8, 11, 15 ]
+        java: [ 8, 11, 17 ]
     name: Java ${{matrix.java}}
     steps:
       - uses: actions/checkout@v2
