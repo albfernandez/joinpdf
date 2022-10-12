@@ -28,8 +28,8 @@ mvn -Pdistribution clean package
 
 # commit and tag release
 git add -A
-git commit -S -m 'Release <2.3.12>'
-git tag -a <2.3.12> -m "Tagging release <2.3.12>"
+git commit -S -m 'Release <2.0.3>'
+git tag -a <2.0.3> -m "Tagging release <2.0.3>"
 git push
 git push --tags
 
