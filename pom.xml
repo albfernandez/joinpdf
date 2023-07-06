@@ -47,7 +47,7 @@
 		
 		<!-- dependencies -->
 		
-		<bouncycastle.version>1.71.1</bouncycastle.version>
+		<bouncycastle.version>1.74</bouncycastle.version>
 		<openpdf.version>1.3.30</openpdf.version>
 		<commonslang3.version>3.12.0</commonslang3.version>
 		<twelvemonkeys.version>3.8.3</twelvemonkeys.version>
