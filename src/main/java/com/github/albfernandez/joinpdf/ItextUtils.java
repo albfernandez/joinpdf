@@ -1,5 +1,7 @@
 package com.github.albfernandez.joinpdf;
 
+import java.lang.reflect.Field;
+
 import com.lowagie.text.Document;
 import com.lowagie.text.pdf.PdfReader;
 
@@ -47,5 +49,21 @@ public final class ItextUtils {
         } catch (Exception e) { // NOPMD
             //
         }
+    }
+    
+    public static PdfReader unlockPdf(PdfReader reader) {
+    	if (reader == null) {
+    		return reader;
+    	}
+    	try {
+    		Field field = reader.getClass().getDeclaredField("encrypted");
+    		field.setAccessible(true);
+    		field.set(reader, false);
+    		return reader;
+    	}
+    	catch(Exception e) {
+    		e.printStackTrace();
+    		return reader;
+    	}
     }
 }

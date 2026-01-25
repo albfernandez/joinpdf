@@ -203,6 +203,7 @@ public class JoinPdf {
         PdfReader pdfReader = null;
         try (InputStream is = new BufferedInputStream(Files.newInputStream(file.toPath()))) {
             pdfReader = new PdfReader(is);
+            pdfReader = ItextUtils.unlockPdf(pdfReader);
             PdfContentByte cb = writer.getDirectContent();
             for (int currentPage = 1; currentPage <= pdfReader.getNumberOfPages(); currentPage++) {
                 Rectangle currentPageSize = pdfReader.getPageSize(currentPage);
@@ -387,6 +388,7 @@ public class JoinPdf {
         PdfReader pdfReader = null;
         try {
             pdfReader = new PdfReader(is);
+            ItextUtils.unlockPdf(pdfReader);
             return pdfReader.getNumberOfPages();
         } catch (Exception e) {
             return 0;
