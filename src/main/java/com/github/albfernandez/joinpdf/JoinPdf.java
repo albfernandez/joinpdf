@@ -48,6 +48,7 @@ import com.lowagie.text.PageSize;
 import com.lowagie.text.Rectangle;
 import com.lowagie.text.pdf.BaseFont;
 import com.lowagie.text.pdf.PdfContentByte;
+import com.lowagie.text.pdf.PdfCopy;
 import com.lowagie.text.pdf.PdfImportedPage;
 import com.lowagie.text.pdf.PdfReader;
 import com.lowagie.text.pdf.PdfWriter;
@@ -71,6 +72,7 @@ public class JoinPdf {
     private float margin = 25.0f;
 
     private List<File> files = new ArrayList<File>();
+    private List<File> tempFiles = new ArrayList<File>();
 
     private static boolean bouncyCastleLoaded = false;
     
@@ -124,6 +126,9 @@ public class JoinPdf {
     
     public final synchronized void export(final OutputStream os) throws Exception {
         checkParameters();
+        
+        List<File> pdfs = toPdfs(this.files);
+        
         Document document = new Document();
 
         try {
@@ -131,15 +136,66 @@ public class JoinPdf {
                 this.totalPages = geTotalPageCount();
                 this.actualPage = 0;
             }
-            PdfWriter writer = PdfWriter.getInstance(document, os);
-            setParametersAndHeaders(writer, document);
+            PdfCopy copy = new PdfCopy(document, os);
             document.open();
-            for (File file : this.files) {
-                add(file, document, writer);
+            setParametersAndHeaders(copy, document);
+            document.open();
+            for (File file : pdfs) {
+                addPdf(file, document, copy);
             }
+            
         } finally {
-            ItextUtils.close(document);
+        	ItextUtils.close(document);
+            clearTempFiles();
         }
+    }
+    
+    private void clearTempFiles() {
+    	if (this.tempFiles != null) {
+    		List<File> toDelete = new ArrayList<File>(this.tempFiles);
+    		tempFiles.clear();
+    		for (File f: toDelete) {
+    			deleteFile(f);
+    		}
+    	}
+    }
+    
+    
+
+
+	private void deleteFile(File f) {
+		try {
+			if (f != null && f.isFile()) {
+				f.delete();
+			}
+		}
+		catch (Exception e) {
+			//
+		}
+	}
+
+	private List<File> toPdfs(List<File> theFiles) throws Exception {
+    	List<File> result = new ArrayList<File>();
+    	for (File f: theFiles) {
+    		if (f.getName().toLowerCase().endsWith(".pdf")) {
+    			result.add(f);
+    		}
+    		else {
+    			File tmp = File.createTempFile("converted", ".pdf");
+    			this.tempFiles.add(tmp);
+    			Document document = new Document();
+    			try (OutputStream os = Files.newOutputStream(tmp.toPath())) {
+    				PdfWriter writer = PdfWriter.getInstance(document, os);
+    				writer.setPdfVersion(PdfWriter.VERSION_1_4);
+    				document.open();
+    				add(f, document, writer);
+    				ItextUtils.close(document);
+    				result.add(tmp);
+    			}
+    		}
+    	}
+    	return result;
+    	
     }
 
     private void add(final File file, final Document document, final PdfWriter writer)
@@ -148,7 +204,7 @@ public class JoinPdf {
         if (fileName.endsWith(".tif") || fileName.endsWith(".tiff")) {
             addTiff(file, document, writer);
         } else if (fileName.endsWith(".pdf")) {
-            addPdf(file, document, writer);
+            addPdf2(file, document, writer);
         } else {
             addImage(file, document, writer);
         }
@@ -197,22 +253,46 @@ public class JoinPdf {
             cb.endText();
         }
     }
+    
+    private void addPdf(File file, Document document, PdfCopy copy) throws Exception{
+    	PdfReader pdfReader = null;
+        try (InputStream is = new BufferedInputStream(Files.newInputStream(file.toPath()))) {
+            pdfReader = new PdfReader(is);
+            pdfReader = ItextUtils.unlockPdf(pdfReader);
+            for (int currentPage = 1; currentPage <= pdfReader.getNumberOfPages(); currentPage++) {
+            	PdfImportedPage page = copy.getImportedPage(pdfReader, currentPage);
+            	if (isPrintPageNumbers()) {
+            		PdfCopy.PageStamp stamp = copy.createPageStamp(page);
+            		PdfContentByte cb = stamp.getOverContent();
+            		 writePageNumber(cb);
+            		stamp.alterContents();
+            	}
+            	copy.addPage(page);               
+            }
+        } finally {
+            if (pdfReader != null) {
+                copy.freeReader(pdfReader);
+                ItextUtils.close(pdfReader);
+            }
+        }
+		
+	}
 
-    private void addPdf(final File file, final Document document, final PdfWriter writer)
+    private void addPdf2(final File file, final Document document, final PdfWriter writer)
             throws Exception {
         PdfReader pdfReader = null;
         try (InputStream is = new BufferedInputStream(Files.newInputStream(file.toPath()))) {
             pdfReader = new PdfReader(is);
             pdfReader = ItextUtils.unlockPdf(pdfReader);
-            PdfContentByte cb = writer.getDirectContent();
             for (int currentPage = 1; currentPage <= pdfReader.getNumberOfPages(); currentPage++) {
+            	PdfContentByte cb = writer.getDirectContent();
                 Rectangle currentPageSize = pdfReader.getPageSize(currentPage);
-                document.setPageSize(currentPageSize);
+                document.setPageSize(currentPageSize);                
                 document.newPage();
                 PdfImportedPage page = writer.getImportedPage(pdfReader, currentPage);
+               
                 cb.addTemplate(page, 0, 0);
                 writePageNumber(cb);
-
             }
             writer.flush();
         } finally {
